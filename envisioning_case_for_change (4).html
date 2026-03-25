@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Envisioning Case for Change</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Serif:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue-70:#0043ce;--blue-60:#0f62fe;--blue-50:#4589ff;--blue-20:#d0e2ff;--blue-10:#edf5ff;
+  --gray-100:#121619;--gray-90:#21272a;--gray-80:#343a3f;--gray-70:#4d5358;
+  --gray-60:#697077;--gray-50:#878d96;--gray-40:#a2a9b0;--gray-30:#c1c7cd;
+  --gray-20:#dde1e6;--gray-10:#f2f4f8;--gray-05:#f4f4f4;
+  --green-60:#198038;--green-50:#24a148;--green-10:#defbe6;
+  --teal-60:#007d79;--teal-10:#d9fbfb;
+  --red-60:#da1e28;--red-10:#fff1f1;
+  --yellow-40:#f1c21b;--yellow-10:#fcf4d6;
+  --orange-50:#ff832b;
+  --purple-60:#8a3ffc;--purple-10:#f6f2ff;
+  --white:#fff;
+  --topbar-h:52px;
+  --tab-h:48px;
+  --font:'IBM Plex Sans',sans-serif;
+  --serif:'IBM Plex Serif',serif;
+  --mono:'IBM Plex Mono',monospace;
+  --radius:2px;
+  --shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--gray-10);color:var(--gray-90);font-size:14px;line-height:1.5;min-height:100vh}
+
+/* ══ TOPBAR ══════════════════════════════════════════════════════════════════ */
+.topbar{position:sticky;top:0;z-index:200;background:var(--gray-100);height:var(--topbar-h);display:flex;align-items:center;padding:0 24px;gap:16px;border-bottom:1px solid var(--gray-80)}
+.ibm-logo{display:flex;flex-direction:column;gap:1.5px;cursor:default}
+.ibm-logo span{display:block;background:var(--blue-60);height:2px}
+.ibm-logo span:nth-child(odd){width:18px}
+.ibm-logo span:nth-child(even){width:14px}
+.topbar-brand{font-size:12px;font-weight:500;letter-spacing:.08em;color:var(--gray-30);text-transform:uppercase}
+.topbar-sep{width:1px;height:22px;background:var(--gray-70)}
+.topbar-name{font-family:var(--serif);font-size:16px;font-weight:300;color:var(--white);letter-spacing:.01em}
+.topbar-name em{font-style:italic;color:var(--blue-50)}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.topbar-client{font-size:11px;color:var(--gray-50);font-family:var(--mono)}
+.topbar-pill{background:var(--blue-70);color:var(--white);font-size:10px;font-weight:500;padding:3px 9px;letter-spacing:.07em;text-transform:uppercase}
+.save-btn{background:transparent;border:1px solid var(--gray-60);color:var(--gray-30);font-size:11px;font-family:var(--mono);padding:5px 12px;cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.save-btn:hover{border-color:var(--blue-50);color:var(--blue-50)}
+.save-btn.danger{border-color:var(--red-60);color:var(--red-60)}
+.save-btn.danger:hover{background:var(--red-10)}
+/* topbar file indicator */
+.file-indicator{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid var(--gray-70);padding:4px 10px;max-width:260px;min-width:160px;cursor:default}
+.file-icon{font-size:12px;flex-shrink:0}
+.file-name{font-family:var(--mono);font-size:10px;color:var(--gray-40);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.03em}
+.file-name.active{color:var(--blue-20)}
+/* save status */
+.save-status{font-size:10px;font-family:var(--mono);letter-spacing:.04em;transition:color .3s;cursor:default;white-space:nowrap}
+.save-status.saved{color:var(--green-50)}
+.save-status.saving{color:var(--yellow-40)}
+.save-status.unsaved{color:var(--gray-50)}
+.save-status.error{color:var(--red-60)}
+.save-btn:disabled{opacity:.35;cursor:not-allowed}
+/* ── SESSION SCREEN overlay ── */
+.session-screen{display:none;position:fixed;inset:0;z-index:500;background:var(--gray-100);align-items:center;justify-content:center;animation:ssFadeIn .2s ease}
+.session-screen.show{display:flex}
+@keyframes ssFadeIn{from{opacity:0}to{opacity:1}}
+.session-card{background:var(--gray-90);border:1px solid var(--gray-80);width:520px;max-width:94vw;padding:36px 40px}
+.ss-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.ss-ibm-bar{display:flex;flex-direction:column;gap:2px}
+.ss-ibm-bar span{display:block;background:var(--blue-60);height:2px}
+.ss-ibm-bar span:nth-child(odd){width:18px}
+.ss-ibm-bar span:nth-child(even){width:14px}
+.ss-brand{font-size:12px;font-weight:500;letter-spacing:.08em;color:var(--gray-40);text-transform:uppercase}
+.ss-title{font-family:var(--serif);font-size:22px;font-weight:300;color:var(--white);margin-bottom:4px}
+.ss-title em{font-style:italic;color:var(--blue-50)}
+.ss-subtitle{font-size:12px;color:var(--gray-50);margin-bottom:28px}
+.ss-divider{height:1px;background:var(--gray-80);margin:24px 0}
+.ss-section-label{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-60);font-family:var(--mono);margin-bottom:12px}
+.ss-name-row{display:flex;gap:8px;margin-bottom:8px}
+.ss-name-input{flex:1;background:var(--gray-80);border:1px solid var(--gray-70);color:var(--white);font-family:var(--mono);font-size:13px;padding:9px 12px;outline:none;letter-spacing:.03em}
+.ss-name-input:focus{border-color:var(--blue-60);background:var(--gray-90)}
+.ss-name-input::placeholder{color:var(--gray-60)}
+.ss-btn{display:flex;align-items:center;gap:8px;width:100%;padding:13px 16px;font-size:13px;font-family:var(--font);font-weight:500;cursor:pointer;border:none;transition:all .15s;margin-bottom:8px;text-align:left}
+.ss-btn-primary{background:var(--blue-60);color:var(--white)}
+.ss-btn-primary:hover{background:var(--blue-70)}
+.ss-btn-primary:disabled{background:var(--gray-70);color:var(--gray-50);cursor:not-allowed}
+.ss-btn-secondary{background:var(--gray-80);color:var(--gray-20);border:1px solid var(--gray-70)}
+.ss-btn-secondary:hover{background:var(--gray-70);color:var(--white)}
+.ss-btn-icon{font-size:16px;flex-shrink:0}
+.ss-btn-text{}
+.ss-btn-hint{font-size:11px;color:inherit;opacity:.65;margin-left:auto;font-family:var(--mono)}
+.ss-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--gray-50);font-size:18px;cursor:pointer;padding:4px 8px;line-height:1}
+.ss-close:hover{color:var(--white)}
+.ss-no-api{background:var(--yellow-10);border-left:3px solid var(--yellow-40);padding:12px 14px;font-size:12px;color:var(--gray-90);line-height:1.5;margin-top:12px;display:none}
+/* ── TOAST ── */
+@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.toast{position:fixed;bottom:28px;right:28px;z-index:9999;padding:13px 18px;font-family:var(--mono);font-size:12px;line-height:1.5;color:var(--white);border-left:3px solid var(--blue-60);background:var(--gray-90);box-shadow:0 4px 20px rgba(0,0,0,.3);max-width:340px;white-space:pre-line;animation:toastIn .2s ease}
+.toast.error{border-left-color:var(--red-60);background:var(--red-60)}
+
+/* ══ PROGRESS ═════════════════════════════════════════════════════════════ */
+.prog-bar{height:2px;background:var(--gray-80);position:sticky;top:var(--topbar-h);z-index:199}
+.prog-fill{height:100%;background:var(--blue-60);transition:width .4s ease;width:0}
+
+/* ══ TABS ════════════════════════════════════════════════════════════════ */
+.tabs-wrap{position:sticky;top:calc(var(--topbar-h) + 2px);z-index:190;background:var(--gray-90);border-bottom:1px solid var(--gray-80)}
+.tabs{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 24px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 20px;height:var(--tab-h);cursor:pointer;border-bottom:2px solid transparent;color:var(--gray-40);font-size:13px;font-weight:400;transition:all .15s;user-select:none;white-space:nowrap}
+.tab:hover{color:var(--gray-10);background:rgba(255,255,255,.04)}
+.tab.active{color:var(--white);border-bottom-color:var(--blue-60)}
+.tab-num{font-family:var(--mono);font-size:10px;color:var(--blue-60);background:rgba(15,98,254,.15);padding:2px 6px;border-radius:2px;transition:all .15s}
+.tab.active .tab-num{background:var(--blue-60);color:var(--white)}
+.tab-dot{width:5px;height:5px;border-radius:50%;background:var(--gray-60);transition:background .15s}
+.tab.done .tab-dot{background:var(--blue-60)}
+.tab.active .tab-dot{display:none}
+
+/* ══ LAYOUT ══════════════════════════════════════════════════════════════ */
+.page{display:none;padding:28px 24px 100px;max-width:1100px;margin:0 auto}
+.page.active{display:block;animation:pageIn .2s ease}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ PAGE HEADER ══════════════════════════════════════════════════════════ */
+.pg-header{margin-bottom:28px}
+.pg-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-60);margin-bottom:6px}
+.pg-title{font-family:var(--serif);font-size:26px;font-weight:300;color:var(--gray-100);line-height:1.2;margin-bottom:6px}
+.pg-sub{font-size:13px;color:var(--gray-60);max-width:680px;line-height:1.6}
+
+/* ══ BLOCKS ═══════════════════════════════════════════════════════════════ */
+.block{background:var(--white);border:1px solid var(--gray-20);margin-bottom:16px;position:relative}
+.block-header{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--gray-10);background:var(--gray-05)}
+.block-stripe{width:3px;height:100%;position:absolute;left:0;top:0;bottom:0}
+.block-stripe.blue{background:var(--blue-60)}
+.block-stripe.green{background:var(--green-60)}
+.block-stripe.teal{background:var(--teal-60)}
+.block-stripe.orange{background:var(--orange-50)}
+.block-stripe.purple{background:var(--purple-60)}
+.block-header-text{flex:1}
+.block-label{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-50);font-family:var(--mono);margin-bottom:2px}
+.block-title{font-size:14px;font-weight:600;color:var(--gray-90)}
+.block-body{padding:0}
+
+/* ══ DRIVER COLUMNS ═══════════════════════════════════════════════════════ */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:720px){.two-col{grid-template-columns:1fr}}
+
+/* ══ DRIVER ITEM ══════════════════════════════════════════════════════════ */
+.driver-item{display:flex;gap:0;border-bottom:1px solid var(--gray-10);align-items:stretch}
+.driver-item:last-child{border-bottom:none}
+.driver-bar{width:3px;flex-shrink:0}
+.driver-bar.ext{background:var(--gray-40)}
+.driver-bar.int{background:var(--blue-60)}
+.driver-bar.ai{background:var(--purple-60)}
+.driver-content{flex:1;padding:12px 16px;display:flex;gap:10px;align-items:flex-start}
+.driver-text-wrap{flex:1;min-width:0}
+.driver-title-edit{font-size:13px;font-weight:600;color:var(--gray-90);background:transparent;border:none;outline:none;width:100%;cursor:text;font-family:var(--font);padding:0;margin-bottom:3px}
+.driver-title-edit:hover{background:var(--blue-10)}
+.driver-title-edit:focus{background:var(--blue-10);outline:1px solid var(--blue-60)}
+.driver-body-edit{font-size:12.5px;color:var(--gray-60);background:transparent;border:none;outline:none;width:100%;resize:none;font-family:var(--font);line-height:1.55;cursor:text;padding:0;min-height:36px}
+.driver-body-edit:hover{background:var(--blue-10)}
+.driver-body-edit:focus{background:var(--blue-10);outline:1px solid var(--blue-60)}
+.del-btn{background:none;border:none;color:var(--gray-30);cursor:pointer;font-size:14px;padding:2px 4px;flex-shrink:0;opacity:0;transition:opacity .15s,color .15s;line-height:1;margin-top:1px}
+.driver-item:hover .del-btn,.q-row:hover .del-btn,.cb-item:hover .del-btn,.rd-row:hover .del-btn{opacity:1}
+.del-btn:hover{color:var(--red-60)}
+
+/* ══ ADD ROW BUTTON ═══════════════════════════════════════════════════════ */
+.add-row-btn{display:flex;align-items:center;gap:8px;padding:10px 18px;font-size:12px;color:var(--blue-60);cursor:pointer;background:transparent;border:none;font-family:var(--font);font-weight:500;transition:background .12s;width:100%;text-align:left;border-top:1px dashed var(--gray-20)}
+.add-row-btn:hover{background:var(--blue-10)}
+.add-row-btn .plus{font-size:16px;line-height:1;color:var(--blue-60)}
+
+/* ══ CHECKBOX QUESTIONS ═══════════════════════════════════════════════════ */
+.q-row{border-bottom:1px solid var(--gray-10)}
+.q-row:last-of-type{border-bottom:none}
+.q-inner{padding:16px 18px;display:flex;gap:12px;align-items:flex-start}
+.q-num{font-family:var(--mono);font-size:10px;color:var(--blue-60);background:var(--blue-10);padding:3px 6px;flex-shrink:0;margin-top:2px;font-weight:500}
+.q-body{flex:1;min-width:0}
+.q-text-edit{font-size:13px;font-weight:500;color:var(--gray-90);background:transparent;border:none;outline:none;width:100%;font-family:var(--font);cursor:text;padding:0;margin-bottom:8px;line-height:1.4}
+.q-text-edit:hover{background:var(--blue-10)}
+.q-text-edit:focus{background:var(--blue-10);outline:1px solid var(--blue-60)}
+.q-hint-edit{font-size:11px;color:var(--gray-50);font-style:italic;background:transparent;border:none;outline:none;width:100%;font-family:var(--font);cursor:text;padding:0;margin-bottom:10px;line-height:1.4}
+.q-hint-edit:hover{background:var(--blue-10)}
+.q-hint-edit:focus{background:var(--blue-10);outline:1px solid var(--blue-60)}
+.cb-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+@media(max-width:600px){.cb-grid{grid-template-columns:1fr}}
+.cb-item{display:flex;align-items:center;gap:9px;padding:7px 10px;border:1px solid var(--gray-20);cursor:default;transition:all .12s;user-select:none;position:relative}
+.cb-item:hover{border-color:var(--blue-60);background:var(--blue-10)}
+.cb-item.checked{border-color:var(--blue-60);background:var(--blue-10)}
+.cb-box{width:16px;height:16px;border:1.5px solid var(--gray-40);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .12s;cursor:pointer}
+.cb-item.checked .cb-box{background:var(--blue-60);border-color:var(--blue-60)}
+.cb-tick{color:var(--white);font-size:10px;display:none;line-height:1}
+.cb-item.checked .cb-tick{display:block}
+.cb-label-edit{font-size:12.5px;color:var(--gray-80);background:transparent;border:none;outline:none;flex:1;font-family:var(--font);cursor:text;padding:0}
+.cb-label-edit:hover{background:var(--blue-10)}
+.cb-label-edit:focus{background:var(--blue-10);outline:none}
+.cb-add-btn{margin-top:6px;display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--blue-60);cursor:pointer;background:none;border:1px dashed var(--gray-20);padding:5px 10px;font-family:var(--font);width:100%;transition:all .12s}
+.cb-add-btn:hover{background:var(--blue-10);border-color:var(--blue-60)}
+
+/* ══ TECH / Q GRID ════════════════════════════════════════════════════════ */
+.tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--gray-20)}
+.tech-card{background:var(--white);padding:16px 18px;position:relative}
+.tech-q-num{font-family:var(--mono);font-size:10px;color:var(--blue-60);font-weight:500;margin-bottom:5px}
+.tech-q-edit{font-size:13px;font-weight:600;color:var(--gray-90);background:transparent;border:none;outline:none;width:100%;font-family:var(--font);cursor:text;padding:0;margin-bottom:8px;line-height:1.4;resize:none;min-height:36px}
+.tech-q-edit:hover{background:var(--blue-10)}
+.tech-q-edit:focus{background:var(--blue-10);outline:1px solid var(--blue-60)}
+.tech-why-edit{font-size:12px;color:var(--gray-50);font-style:italic;background:var(--gray-05);border-left:3px solid var(--gray-20);padding:7px 10px;outline:none;width:100%;font-family:var(--font);cursor:text;resize:none;min-height:32px;line-height:1.5;border-top:none;border-right:none;border-bottom:none}
+.tech-why-edit:hover{background:var(--blue-10);border-left-color:var(--blue-60)}
+.tech-why-edit:focus{background:var(--blue-10);border-left-color:var(--blue-60)}
+.tech-card .del-btn{position:absolute;top:10px;right:10px}
+.add-tech-btn{background:var(--white);border:1px dashed var(--gray-20);padding:14px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:var(--blue-60);cursor:pointer;font-family:var(--font);font-weight:500;transition:all .12s;grid-column:span 1}
+.add-tech-btn:hover{background:var(--blue-10);border-color:var(--blue-60)}
+
+/* ══ READINESS TABLE ══════════════════════════════════════════════════════ */
+.rd-table{width:100%;border-collapse:collapse}
+.rd-thead{background:var(--gray-90)}
+.rd-thead th{padding:10px 14px;text-align:left;font-size:10.5px;font-weight:500;color:var(--gray-20);letter-spacing:.07em;text-transform:uppercase;font-family:var(--mono);border-right:1px solid var(--gray-80)}
+.rd-thead th:last-child{border-right:none}
+.rd-row{border-bottom:1px solid var(--gray-10);position:relative}
+.rd-row:nth-child(even){background:var(--gray-05)}
+.rd-row:hover{background:var(--blue-10)}
+.rd-row td{padding:12px 14px;vertical-align:middle;border-right:1px solid var(--gray-20)}
+.rd-row td:last-child{border-right:none}
+.rd-dim-edit{font-size:13px;font-weight:600;color:var(--gray-90);background:transparent;border:none;outline:none;width:100%;font-family:var(--font);cursor:text;padding:0;min-width:140px}
+.rd-dim-edit:hover{background:var(--blue-10)}
+.rd-dim-edit:focus{background:var(--blue-10);outline:1px solid var(--blue-60)}
+.rd-q-edit{font-size:12px;color:var(--gray-60);font-style:italic;background:transparent;border:none;outline:none;width:100%;font-family:var(--font);cursor:text;padding:0;resize:none;min-height:32px;line-height:1.5}
+.rd-q-edit:hover{background:var(--blue-10)}
+.rd-q-edit:focus{background:var(--blue-10);outline:1px solid var(--blue-60)}
+.rd-rating-cell{display:flex;flex-direction:column;gap:6px;align-items:flex-start;min-width:170px}
+.rd-stars{display:flex;gap:3px}
+.rd-star{width:26px;height:26px;border:1.5px solid var(--gray-20);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:var(--mono);color:var(--gray-40);transition:all .12s;user-select:none}
+.rd-star:hover{border-color:var(--blue-60);background:var(--blue-10)}
+.rd-star.on-1,.rd-star.on-2{background:var(--red-60);border-color:var(--red-60);color:var(--white)}
+.rd-star.on-3{background:var(--yellow-40);border-color:var(--yellow-40);color:var(--gray-90)}
+.rd-star.on-4,.rd-star.on-5{background:var(--green-60);border-color:var(--green-60);color:var(--white)}
+.rd-gap-sel{font-family:var(--mono);font-size:11px;padding:4px 8px;border:1px solid var(--gray-20);background:var(--white);color:var(--gray-70);cursor:pointer;outline:none;width:100%}
+.rd-gap-sel:focus{border-color:var(--blue-60)}
+.rd-flag-edit{font-size:11.5px;color:var(--red-60);font-style:italic;background:transparent;border:none;outline:none;width:100%;font-family:var(--font);cursor:text;padding:0;resize:none;min-height:28px;line-height:1.4}
+.rd-flag-edit:hover{background:var(--red-10)}
+.rd-flag-edit:focus{background:var(--red-10);outline:1px solid var(--red-60)}
+
+/* ══ SECTION COMMENTS ═════════════════════════════════════════════════════ */
+.section-comment-wrap{margin-top:20px;background:var(--white);border:1px solid var(--gray-20);padding:16px 18px}
+.section-comment-label{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-50);font-family:var(--mono);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.section-comment-label::after{content:'';flex:1;height:1px;background:var(--gray-20)}
+.section-comment-textarea{width:100%;min-height:80px;border:1px solid var(--gray-20);padding:10px 12px;font-family:var(--font);font-size:13px;color:var(--gray-80);resize:vertical;outline:none;background:var(--gray-05);line-height:1.6}
+.section-comment-textarea:focus{border-color:var(--blue-60);background:var(--white)}
+.section-comment-textarea::placeholder{color:var(--gray-40);font-style:italic}
+
+/* ══ NOTICE CALLOUT ═══════════════════════════════════════════════════════ */
+.notice{display:flex;gap:12px;padding:12px 16px;margin-bottom:20px;font-size:12.5px;line-height:1.5}
+.notice.info{background:var(--blue-10);border-left:3px solid var(--blue-60);color:var(--gray-80)}
+.notice.warn{background:var(--yellow-10);border-left:3px solid var(--yellow-40);color:var(--gray-80)}
+.notice.new{background:var(--purple-10);border-left:3px solid var(--purple-60);color:var(--gray-80)}
+.notice-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.notice strong{font-weight:600;color:var(--gray-100)}
+
+/* ══ NAV FOOTER ═══════════════════════════════════════════════════════════ */
+.pg-nav{display:flex;gap:8px;margin-top:28px;padding-top:20px;border-top:1px solid var(--gray-20)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font-size:13px;font-family:var(--font);cursor:pointer;border:none;font-weight:500;transition:all .15s;letter-spacing:.01em}
+.btn-primary{background:var(--blue-60);color:var(--white)}
+.btn-primary:hover{background:var(--blue-70)}
+.btn-ghost{background:transparent;color:var(--gray-60);border:1px solid var(--gray-20)}
+.btn-ghost:hover{background:var(--gray-10);border-color:var(--gray-40)}
+
+/* ══ AI READINESS SPECIAL ═════════════════════════════════════════════════ */
+.ai-banner{background:linear-gradient(135deg,var(--gray-90) 0%,#1a1033 100%);color:var(--white);padding:16px 18px;margin-bottom:1px;display:flex;align-items:center;gap:14px}
+.ai-chip{background:var(--purple-60);color:var(--white);font-family:var(--mono);font-size:9px;font-weight:500;padding:3px 8px;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0}
+.ai-banner-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.5}
+.ai-banner-text strong{color:var(--white);font-weight:500}
+
+/* ══ SCROLLBAR ════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--gray-30);border-radius:3px}
+
+/* ══ EDIT HINT ════════════════════════════════════════════════════════════ */
+.edit-hint{font-size:10px;color:var(--gray-40);font-family:var(--mono);display:flex;align-items:center;gap:5px;margin-bottom:14px}
+.edit-hint::before{content:'✎';font-size:11px}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="ibm-logo" title="IBM Consulting">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <span class="topbar-brand">IBM Consulting</span>
+  <div class="topbar-sep"></div>
+  <div class="topbar-name"><em>Envisioning</em> Case for Change</div>
+  <div class="topbar-right">
+    <span class="topbar-client" id="clientLabel">Manufacturing &amp; Industrial · Confidential</span>
+    <span class="topbar-pill">MVP Diagnostic</span>
+    <span class="save-status" id="saveStatus" title="Auto-saved to browser storage">⬤ Saved</span>
+    <button class="save-btn" onclick="importJSON()" title="Load a previously exported JSON back into the app">↑ Load JSON</button>
+    <button class="save-btn" onclick="exportJSON()">⬇ Export JSON</button>
+    <button class="save-btn danger" onclick="clearSession()" title="Reset all data and start fresh">✕ Clear</button>
+    <input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleFileLoad(event)">
+  </div>
+</header>
+
+<!-- ══ SESSION START SCREEN ══════════════════════════════════════════════ -->
+<div class="session-screen" id="sessionScreen">
+  <div class="session-card" style="position:relative">
+    <button class="ss-close" id="ssCloseBtn" onclick="closeSessionScreen()" style="display:none">✕</button>
+
+    <!-- Branding -->
+    <div class="ss-logo">
+      <div class="ss-ibm-bar"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <span class="ss-brand">IBM Consulting</span>
+    </div>
+    <div class="ss-title"><em>Envisioning</em> Case for Change</div>
+    <div class="ss-subtitle">Finance Transformation Diagnostic · Manufacturing &amp; Industrial</div>
+
+    <!-- NEW SESSION -->
+    <div class="ss-section-label">Start a new session</div>
+    <div class="ss-name-row">
+      <input class="ss-name-input" id="ssNameInput" placeholder="e.g. Acme Corp – March 2025" maxlength="80"
+        oninput="document.getElementById('ssCreateBtn').disabled=!this.value.trim()">
+    </div>
+    <button class="ss-btn ss-btn-primary" id="ssCreateBtn" onclick="createNewSession()" disabled>
+      <span class="ss-btn-icon">📁</span>
+      <span class="ss-btn-text">Create session &amp; choose where to save on my computer</span>
+      <span class="ss-btn-hint">Opens a Save dialog →</span>
+    </button>
+
+    <div class="ss-divider"></div>
+
+    <!-- LOAD EXISTING -->
+    <div class="ss-section-label">Continue an existing session</div>
+    <button class="ss-btn ss-btn-secondary" onclick="loadExistingSession()">
+      <span class="ss-btn-icon">📂</span>
+      <span class="ss-btn-text">Open a session file from my computer</span>
+      <span class="ss-btn-hint">Pick a .json file →</span>
+    </button>
+
+    <!-- No File API fallback notice -->
+    <div class="ss-no-api" id="ssNoApi">
+      ⚠ Your browser does not support direct file saving. Use Edge or Chrome for the best experience.
+      You can still use the app — click Export JSON at any time to download a backup.
+    </div>
+    <input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleFileLoad(event)">
+  </div>
+</div>
+
+<div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs" id="tabBar"></div>
+</div>
+
+<!-- PAGES -->
+<div id="pages">
+
+  <!-- PAGE 0: EXTERNAL & INTERNAL DRIVERS -->
+  <div class="page active" id="page0">
+    <div class="pg-header">
+      <div class="pg-eyebrow">Section 01</div>
+      <div class="pg-title">External & Internal Drivers</div>
+      <div class="pg-sub">Map the forces shaping the transformation agenda — external pressures from the market and internal operating model findings that create the urgency for change</div>
+    </div>
+    <div class="edit-hint">Click any text to edit · Hover a row to delete · Use + buttons to add</div>
+
+    <div class="two-col">
+      <!-- External -->
+      <div class="block">
+        <div class="block-stripe blue"></div>
+        <div class="block-header" style="padding-left:22px">
+          <div class="block-header-text">
+            <div class="block-label">External Environment</div>
+            <div class="block-title">Market & business pressures</div>
+          </div>
+        </div>
+        <div class="block-body" id="extDrivers">
+          <!-- populated by JS -->
+        </div>
+        <button class="add-row-btn" onclick="addDriver('extDrivers','ext')"><span class="plus">+</span> Add external driver</button>
+      </div>
+
+      <!-- Internal -->
+      <div class="block">
+        <div class="block-stripe" style="background:var(--teal-60)"></div>
+        <div class="block-header" style="padding-left:22px">
+          <div class="block-header-text">
+            <div class="block-label">Internal Operating Model</div>
+            <div class="block-title">Current-state findings & pain points</div>
+          </div>
+        </div>
+        <div class="block-body" id="intDrivers">
+          <!-- populated by JS -->
+        </div>
+        <button class="add-row-btn" onclick="addDriver('intDrivers','int')"><span class="plus">+</span> Add internal driver</button>
+      </div>
+    </div>
+
+    <div class="section-comment-wrap">
+      <div class="section-comment-label">Facilitator observations — Section 01</div>
+      <textarea class="section-comment-textarea" placeholder="Capture key themes, surprises or follow-up questions from this section…" id="comment0"></textarea>
+    </div>
+    <div class="pg-nav">
+      <button class="btn btn-primary" onclick="goTo(1)">Context & Ambition →</button>
+    </div>
+  </div>
+
+  <!-- PAGE 1: CONTEXT & AMBITION -->
+  <div class="page" id="page1">
+    <div class="pg-header">
+      <div class="pg-eyebrow">Section 02</div>
+      <div class="pg-title">Context & Strategic Ambition</div>
+      <div class="pg-sub">Understand the transformation drivers and the strength of the leadership mandate — this defines programme design, sequencing and investment profile</div>
+    </div>
+    <div class="edit-hint">Click any text to edit · Click checkboxes to select · Use + buttons to add options or questions</div>
+    <div id="ambitionQuestions"><!-- populated by JS --></div>
+    <button class="add-row-btn" style="border-top:1px dashed var(--gray-20);margin-top:4px" onclick="addAmbitionQ()"><span class="plus">+</span> Add question</button>
+
+    <div class="section-comment-wrap">
+      <div class="section-comment-label">Facilitator observations — Section 02</div>
+      <textarea class="section-comment-textarea" placeholder="Capture leadership tone, alignment gaps, or contextual notes…" id="comment1"></textarea>
+    </div>
+    <div class="pg-nav">
+      <button class="btn btn-ghost" onclick="goTo(0)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(2)">Technology & Data →</button>
+    </div>
+  </div>
+
+  <!-- PAGE 2: TECHNOLOGY & DATA + AI -->
+  <div class="page" id="page2">
+    <div class="pg-header">
+      <div class="pg-eyebrow">Section 03</div>
+      <div class="pg-title">Technology, Data & AI Readiness</div>
+      <div class="pg-sub">Assess ERP complexity, data quality, automation maturity and AI readiness — these determine the speed and cost of transformation</div>
+    </div>
+    <div class="edit-hint">Click any text to edit · Use + to add questions</div>
+
+    <!-- Tech & Data block -->
+    <div class="block" style="margin-bottom:16px">
+      <div class="block-stripe blue"></div>
+      <div class="block-header" style="padding-left:22px">
+        <div class="block-header-text">
+          <div class="block-label">Technology & Data</div>
+          <div class="block-title">ERP landscape, master data quality, automation readiness</div>
+        </div>
+      </div>
+      <div class="tech-grid" id="techQuestions"><!-- populated by JS --></div>
+      <button class="add-row-btn" onclick="addTechQ('techQuestions','tech')"><span class="plus">+</span> Add technology / data question</button>
+    </div>
+
+    <!-- AI Readiness block -->
+    <div class="block" style="margin-bottom:16px">
+      <div class="block-stripe" style="background:var(--purple-60)"></div>
+      <div class="ai-banner">
+        <span class="ai-chip">AI Readiness</span>
+        <div class="ai-banner-text"><strong>New diagnostic dimension</strong> — assess how advanced the organisation is in adopting AI, and whether the Finance function is positioned to benefit from the AI wave in transformation</div>
+      </div>
+      <div class="tech-grid" id="aiQuestions"><!-- populated by JS --></div>
+      <button class="add-row-btn" onclick="addTechQ('aiQuestions','ai')"><span class="plus">+</span> Add AI readiness question</button>
+    </div>
+
+    <div class="section-comment-wrap">
+      <div class="section-comment-label">Facilitator observations — Section 03</div>
+      <textarea class="section-comment-textarea" placeholder="Note ERP complexity, data quality concerns, AI maturity assessment, key blockers…" id="comment2"></textarea>
+    </div>
+    <div class="pg-nav">
+      <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(3)">Organisational Readiness →</button>
+    </div>
+  </div>
+
+  <!-- PAGE 3: ORG READINESS -->
+  <div class="page" id="page3">
+    <div class="pg-header">
+      <div class="pg-eyebrow">Section 04</div>
+      <div class="pg-title">Organisational Readiness</div>
+      <div class="pg-sub">Transformation readiness is as important as identifying the opportunity — rate each dimension and flag risks before committing to programme design</div>
+    </div>
+    <div class="edit-hint">Click any text to edit · Rate 1–5 · Set gap level · Use + to add dimensions</div>
+
+    <div class="block">
+      <div class="block-stripe" style="background:var(--orange-50)"></div>
+      <div class="block-header" style="padding-left:22px">
+        <div class="block-header-text">
+          <div class="block-label">Readiness Assessment</div>
+          <div class="block-title">Rate each dimension — 1 = not ready, 5 = fully ready</div>
+        </div>
+      </div>
+      <table class="rd-table">
+        <thead class="rd-thead">
+          <tr>
+            <th style="width:18%">Dimension</th>
+            <th style="width:30%">Diagnostic question</th>
+            <th style="width:18%">Rating & gap</th>
+            <th style="width:30%">Risk if low</th>
+            <th style="width:4%"></th>
+          </tr>
+        </thead>
+        <tbody id="rdRows"><!-- populated by JS --></tbody>
+      </table>
+      <button class="add-row-btn" onclick="addRdRow()"><span class="plus">+</span> Add readiness dimension</button>
+    </div>
+
+    <div class="section-comment-wrap">
+      <div class="section-comment-label">Facilitator observations — Section 04</div>
+      <textarea class="section-comment-textarea" placeholder="Summarise readiness posture, political risks, sponsorship strength, recommended pre-conditions…" id="comment3"></textarea>
+    </div>
+    <div class="pg-nav">
+      <button class="btn btn-ghost" onclick="goTo(2)">← Back</button>
+      <button class="btn btn-primary" onclick="finishDiag()">Complete Diagnostic ✓</button>
+    </div>
+  </div>
+
+</div><!-- /pages -->
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+//  ENVISIONING CASE FOR CHANGE  ·  v3  ·  File System Access API
+//
+//  HOW SAVING WORKS (plain English):
+//
+//  1. When you click "Create session", a Save dialog opens — exactly like
+//     saving a Word document. You pick a folder and filename on your computer.
+//     Example: C:\Users\You\Documents\Clients\Acme_March2025.json
+//
+//  2. After that, every time you make a change, the app silently writes
+//     directly to THAT FILE on your computer — no popups, no Downloads folder.
+//     The file updates in the background every ~1.5 seconds.
+//
+//  3. The topbar always shows the filename and the last save time so you
+//     know exactly where your data is and when it was last written.
+//
+//  4. Next time: click "Open a session file", pick the same .json file,
+//     and everything is restored exactly as you left it.
+//
+//  BROWSER REQUIREMENT: Edge or Chrome (File System Access API).
+//  You are using Edge on Render — this works perfectly.
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let fileHandle   = null;   // the file on your computer (once you've picked it)
+let sessionName  = '';     // e.g. "Acme Corp – March 2025"
+let saveTimer    = null;
+let isDirty      = false;  // true if there are unsaved changes
+let currentPage  = 0;
+const TOTAL_PAGES = 4;
+const rdRatings  = {};
+let rdRowCount   = 0;
+const HAS_FILE_API = ('showSaveFilePicker' in window);
+
+// ── TABS ────────────────────────────────────────────────────────────────────
+const TABS = [
+  {num:'01', label:'External & Internal Drivers'},
+  {num:'02', label:'Context & Ambition'},
+  {num:'03', label:'Technology & Data & AI'},
+  {num:'04', label:'Organisational Readiness'},
+];
+
+// ── DEFAULT CONTENT ─────────────────────────────────────────────────────────
+const DEFAULTS = {
+  drivers: {
+    external: [
+      {title:'Macroeconomic volatility',  body:'Finance must deliver scenario analysis at speed. Current structures are too slow and fragmented to model reliably under pressure.'},
+      {title:'Regulatory expansion',       body:'Multi-country statutory and tax obligations are growing. Manual compliance workstreams create material risk and cost.'},
+      {title:'Board & investor scrutiny',  body:'Management wants real-time visibility. Current systems produce month-old data, limiting CFO credibility and decision speed.'},
+      {title:'Technology inflection',      body:'AI and automation are now table stakes. Early movers are building structural cost advantages that laggards cannot close incrementally.'},
+    ],
+    internal: [
+      {title:'BU fragmentation',    body:'Multiple BUs with independent Finance teams means duplicated headcount, inconsistent data and no single version of the truth.'},
+      {title:'Country complexity',  body:'Multi-country footprint creates currency, statutory and intercompany complexity resolved manually in the close cycle every month.'},
+      {title:'Talent misallocation',body:'Finance professionals spend the majority of time on transactional processing rather than insight and value-add analysis.'},
+      {title:'Technology debt',     body:'Legacy ERP instances, spreadsheet bridges and offline tools amplify every process failure and block automation.'},
+    ],
+    comment: ''
+  },
+  ambition: {
+    questions: [
+      {text:'What is driving the transformation?',
+       hint:'Tick all that apply — each driver implies a different sequencing and investment profile',
+       options:[{label:'Cost reduction & headcount efficiency',selected:false},{label:'ERP / technology modernisation',selected:false},{label:'Shared Services / GBS setup',selected:false},{label:'M&A integration & harmonisation',selected:false}]},
+      {text:"What is the CFO's 3-year ambition for Finance?",
+       hint:'Defines whether this is a cost programme or a capability programme',
+       options:[{label:'Reduce Finance cost as % of revenue to benchmark',selected:false},{label:'Move Finance to strategic business partner',selected:false},{label:'Enable scalable platform for M&A / organic growth',selected:false},{label:'Consolidate country / BU Finance into centre of excellence',selected:false}]},
+      {text:'What is the burning platform — why now?',
+       hint:'Determines urgency, sponsorship strength and change appetite',
+       options:[{label:'New ERP / system investment already committed',selected:false},{label:'Margin pressure requiring structural cost reduction',selected:false},{label:'M&A event requiring Finance integration',selected:false},{label:'Board / investor expectation of operational excellence',selected:false}]},
+    ],
+    comment: ''
+  },
+  technology: {
+    tech:[
+      {q:'How many ERP instances run across your countries and business units?',                               why:'ERP fragmentation is the #1 driver of process inconsistency and manual reconciliation effort'},
+      {q:'Are there committed ERP modernisation or harmonisation plans already in motion?',                    why:'A live ERP programme changes sequencing — process design must precede system configuration'},
+      {q:'What is the quality and completeness of master data (vendor, customer, GL) across entities?',       why:'Automation fails on poor master data — data quality assessment is prerequisite'},
+      {q:'What Finance automation tools are currently in use (RPA, OCR, workflow engines)?',                  why:'Existing automation reduces investment needed and accelerates time-to-value'},
+      {q:'Is there a single Finance data warehouse or do BUs report from separate source systems?',           why:'Fragmented data is the root cause of management information delays'},
+      {q:'For M&A targets or recently acquired entities: what is their ERP and process maturity?',            why:'Integration cost is driven by the complexity gap between acquirer and target Finance function'},
+    ],
+    ai:[
+      {q:'What AI tools or platforms are currently being used within Finance or the broader organisation (e.g. Copilot, ChatGPT, custom LLMs)?', why:'Baseline AI tool adoption indicates cultural readiness and where Finance sits in the AI maturity curve'},
+      {q:'Is there an AI strategy or governance framework in place — and does Finance have representation in it?',                               why:'Absence of AI governance creates risk around data privacy, model reliability and tool proliferation'},
+      {q:'How would you rate the quality and accessibility of Finance data for AI use (structured, labelled, API-accessible)?',                  why:'AI models require clean, structured, accessible data — poor data quality is the primary barrier'},
+      {q:'Are there active AI pilots or proofs of concept underway in Finance (e.g. forecasting, anomaly detection, narrative generation)?',    why:'Live pilots demonstrate organisational appetite and provide early evidence of feasibility and value'},
+      {q:"What is leadership's stated ambition for AI in Finance — and how does it translate to budget and resource?",                          why:'Ambition without investment is noise — the budget posture reveals the true AI transformation appetite'},
+      {q:'What are the biggest perceived barriers to AI adoption in Finance today (skills, data, trust, regulation, culture)?',                  why:'Barrier identification determines sequencing — skills and trust gaps need different interventions than data gaps'},
+    ],
+    comment: ''
+  },
+  readiness: {
+    dimensions:[
+      {dimension:'Sponsorship & mandate',        question:'Does the CFO have active board mandate, or is this Finance-led without full executive backing?',         rating:null, gap:'', risk:'Without CFO mandate, BU resistance will stall standardisation and sustain the status quo'},
+      {dimension:'Change capacity',              question:'What major change programmes are underway (ERP, restructuring, M&A) competing for Finance capacity?',    rating:null, gap:'', risk:'Competing programmes reduce transformation capacity and cause scope conflicts'},
+      {dimension:'GBS / Shared Services appetite',question:'Is there genuine appetite to consolidate Finance into a shared service or GBS model across countries?', rating:null, gap:'', risk:'GBS unlocks 25–40% cost benefit but requires strong political will and commitment'},
+      {dimension:'Finance talent & capability',  question:'Does Finance leadership have transformation experience, or will external expertise be required?',        rating:null, gap:'', risk:'Capability gap in delivery is a primary cause of programme stalls and benefit shortfalls'},
+      {dimension:'BU Finance relationships',     question:'What is the relationship between Group Finance and BU Finance teams — collaborative or adversarial?',   rating:null, gap:'', risk:'BU resistance to standardisation is the #1 people risk in multi-BU transformation'},
+      {dimension:'M&A integration posture',      question:'Is there a Finance integration playbook, or is each acquisition managed ad hoc?',                       rating:null, gap:'', risk:'Ad hoc M&A integration compounds process and data complexity with each deal'},
+    ],
+    comment: ''
+  }
+};
+
+// ════════════════════════════════════════════════════════════════════════════
+//  SESSION SCREEN
+// ════════════════════════════════════════════════════════════════════════════
+
+function showSessionScreen() {
+  const sc = document.getElementById('sessionScreen');
+  sc.classList.add('show');
+  // Show close button only if a session is already open
+  document.getElementById('ssCloseBtn').style.display = fileHandle ? 'block' : 'none';
+  // Show no-API warning if needed
+  if (!HAS_FILE_API) document.getElementById('ssNoApi').style.display = 'block';
+  // Pre-fill name if we have one
+  if (sessionName) document.getElementById('ssNameInput').value = sessionName;
+  document.getElementById('ssNameInput').focus();
+}
+
+function closeSessionScreen() {
+  document.getElementById('sessionScreen').classList.remove('show');
+}
+
+// ── CREATE NEW SESSION ──────────────────────────────────────────────────────
+async function createNewSession() {
+  const name = document.getElementById('ssNameInput').value.trim();
+  if (!name) return;
+
+  // If there's an existing session with unsaved changes, warn
+  if (fileHandle && isDirty) {
+    if (!confirm(`You have unsaved changes in "${sessionName}".\n\nStart a new session anyway? (Your current file will not be updated.)`)) return;
+  }
+
+  if (HAS_FILE_API) {
+    // Open a Save dialog — user picks folder and filename
+    try {
+      const suggested = sanitiseFilename(name) + '_' + today() + '.json';
+      const handle = await window.showSaveFilePicker({
+        suggestedName: suggested,
+        types: [{description:'JSON Session File', accept:{'application/json':['.json']}}],
+        startIn: 'documents'   // opens in Documents folder by default
+      });
+      fileHandle  = handle;
+      sessionName = name;
+      loadDefaults();
+      closeSessionScreen();
+      updateFileIndicator();
+      // Write the initial file immediately so it exists on disk
+      await writeToDisk();
+      showToast(`✓ Session created\nSaving to: ${handle.name}`);
+    } catch(e) {
+      if (e.name !== 'AbortError') showToast('Could not create file — try again', true);
+    }
+  } else {
+    // Fallback for browsers without File System API
+    sessionName = name;
+    fileHandle  = null;
+    loadDefaults();
+    closeSessionScreen();
+    updateFileIndicator();
+    showToast('Session started.\nUse "Save Now" to download a backup file.');
+  }
+}
+
+// ── LOAD EXISTING SESSION ───────────────────────────────────────────────────
+async function loadExistingSession() {
+  if (HAS_FILE_API) {
+    try {
+      // Open a file picker — user picks their .json session file
+      const [handle] = await window.showOpenFilePicker({
+        types: [{description:'JSON Session File', accept:{'application/json':['.json']}}],
+        startIn: 'documents',
+        multiple: false
+      });
+      const file   = await handle.getFile();
+      const text   = await file.text();
+      const state  = JSON.parse(text);
+      fileHandle   = handle;
+      sessionName  = state._sessionName || handle.name.replace('.json','');
+      restoreState(state);
+      closeSessionScreen();
+      updateFileIndicator();
+      setStatus('saved', 'Loaded from file');
+      showToast(`✓ Session loaded\n"${sessionName}"\nFile: ${handle.name}`);
+    } catch(e) {
+      if (e.name !== 'AbortError') showToast('Could not read file — make sure it is a .json session file', true);
+    }
+  } else {
+    // Fallback
+    document.getElementById('fileInput').click();
+  }
+}
+
+// Fallback file input handler (non-Edge browsers / local open)
+function handleFileLoad(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const state = JSON.parse(e.target.result);
+      sessionName = state._sessionName || file.name.replace('.json','');
+      fileHandle  = null;  // no handle in fallback mode
+      restoreState(state);
+      closeSessionScreen();
+      updateFileIndicator();
+      setStatus('saved', 'Loaded');
+      showToast(`✓ Session loaded: "${sessionName}"`);
+    } catch(err) {
+      showToast('Could not read file — make sure it is a valid session file', true);
+    }
+  };
+  reader.readAsText(file);
+  evt.target.value = '';
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  SAVING
+// ════════════════════════════════════════════════════════════════════════════
+
+// Called by every DOM change (input, click, delete)
+function scheduleSave() {
+  if (!fileHandle && !HAS_FILE_API) {
+    // No file open and no API — mark dirty, nothing else we can do silently
+    isDirty = true;
+    setStatus('unsaved');
+    return;
+  }
+  isDirty = true;
+  setStatus('saving');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(writeToDisk, 1500);
+}
+
+// The actual write — saves directly to the file the user picked
+async function writeToDisk() {
+  if (!fileHandle) {
+    // No file handle — fall back to showing "unsaved" status
+    isDirty = true;
+    setStatus('unsaved');
+    return;
+  }
+  try {
+    const state = collectState();
+    const json  = JSON.stringify(state, null, 2);
+    // Request write permission (Edge/Chrome grant this automatically for files
+    // the user already picked — no popup appears after the first pick)
+    const writable = await fileHandle.createWritable();
+    await writable.write(json);
+    await writable.close();
+    isDirty = false;
+    const t = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    setStatus('saved', `Saved ${t}`);
+  } catch(e) {
+    setStatus('error');
+    console.error('Write failed:', e);
+    // If permission was lost (e.g. after page refresh on Render),
+    // re-request it automatically
+    if (e.name === 'NotAllowedError') {
+      try {
+        await fileHandle.requestPermission({mode:'readwrite'});
+        scheduleSave();
+      } catch(_) {}
+    }
+  }
+}
+
+// Manual save button — also used as fallback download
+async function manualSave() {
+  if (fileHandle) {
+    clearTimeout(saveTimer);
+    await writeToDisk();
+  } else {
+    // Fallback download
+    const state    = collectState();
+    const filename = sanitiseFilename(sessionName || 'session') + '_' + today() + '.json';
+    const blob     = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+    const a        = document.createElement('a');
+    a.href         = URL.createObjectURL(blob);
+    a.download     = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast(`💾 Downloaded: ${filename}\n(check your Downloads folder)`);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  STATUS INDICATOR
+// ════════════════════════════════════════════════════════════════════════════
+
+function setStatus(state, label) {
+  const el = document.getElementById('saveStatus');
+  const btn = document.getElementById('saveBtn');
+  if (!el) return;
+  el.className = 'save-status ' + state;
+  if (state === 'saved')   { el.textContent = '⬤ ' + (label || 'Saved'); el.title = 'All changes saved to your file'; }
+  if (state === 'saving')  { el.textContent = '○ Saving…'; el.title = 'Writing to your file…'; }
+  if (state === 'unsaved') { el.textContent = '○ Not saved'; el.title = 'Open a session file to enable auto-save'; }
+  if (state === 'error')   { el.textContent = '⚠ Save error'; el.title = 'Could not write to file — try Save Now'; }
+  if (btn) btn.disabled = !fileHandle;
+}
+
+function updateFileIndicator() {
+  const nameEl = document.getElementById('fileName');
+  const btn    = document.getElementById('saveBtn');
+  if (fileHandle) {
+    nameEl.textContent = fileHandle.name;
+    nameEl.className   = 'file-name active';
+    nameEl.title       = 'Your session is auto-saving to this file';
+    if (btn) btn.disabled = false;
+    setStatus('saved', 'Ready');
+  } else if (sessionName) {
+    nameEl.textContent = sessionName + ' (no file)';
+    nameEl.className   = 'file-name';
+    nameEl.title       = 'No file linked — use Save Now to download a copy';
+    setStatus('unsaved');
+  } else {
+    nameEl.textContent = 'No file open';
+    nameEl.className   = 'file-name';
+    if (btn) btn.disabled = true;
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  STATE — COLLECT FROM DOM & RESTORE INTO DOM
+// ════════════════════════════════════════════════════════════════════════════
+
+function collectState() {
+  return {
+    _sessionName: sessionName,
+    _savedAt:     new Date().toISOString(),
+    _version:     'v3',
+    currentPage,
+    drivers: {
+      external: [...document.querySelectorAll('#extDrivers .driver-item')].map(el=>({
+        title: el.querySelector('.driver-title-edit').value,
+        body:  el.querySelector('.driver-body-edit').value
+      })),
+      internal: [...document.querySelectorAll('#intDrivers .driver-item')].map(el=>({
+        title: el.querySelector('.driver-title-edit').value,
+        body:  el.querySelector('.driver-body-edit').value
+      })),
+      comment: document.getElementById('comment0').value
+    },
+    ambition: {
+      questions: [...document.querySelectorAll('#ambitionQuestions .q-row')].map(qr=>({
+        text:    qr.querySelector('.q-text-edit').value,
+        hint:    qr.querySelector('.q-hint-edit').value,
+        options: [...qr.querySelectorAll('.cb-item')].map(cb=>({
+          label:    cb.querySelector('.cb-label-edit').value,
+          selected: cb.classList.contains('checked')
+        }))
+      })),
+      comment: document.getElementById('comment1').value
+    },
+    technology: {
+      tech: [...document.querySelectorAll('#techQuestions .tech-card')].map(c=>({
+        q:   c.querySelector('.tech-q-edit').value,
+        why: c.querySelector('.tech-why-edit').value
+      })),
+      ai: [...document.querySelectorAll('#aiQuestions .tech-card')].map(c=>({
+        q:   c.querySelector('.tech-q-edit').value,
+        why: c.querySelector('.tech-why-edit').value
+      })),
+      comment: document.getElementById('comment2').value
+    },
+    readiness: {
+      dimensions: [...document.querySelectorAll('#rdRows .rd-row')].map(r=>({
+        dimension: r.querySelector('.rd-dim-edit').value,
+        question:  r.querySelector('.rd-q-edit').value,
+        rating:    rdRatings[r.id] || null,
+        gap:       r.querySelector('.rd-gap-sel').value,
+        risk:      r.querySelector('.rd-flag-edit').value
+      })),
+      comment: document.getElementById('comment3').value
+    }
+  };
+}
+
+function restoreState(state) {
+  // Drivers
+  document.getElementById('extDrivers').innerHTML = '';
+  document.getElementById('intDrivers').innerHTML = '';
+  (state.drivers?.external || []).forEach(d => addDriver('extDrivers','ext', d.title, d.body, false));
+  (state.drivers?.internal || []).forEach(d => addDriver('intDrivers','int', d.title, d.body, false));
+  document.getElementById('comment0').value = state.drivers?.comment || '';
+  // Ambition
+  document.getElementById('ambitionQuestions').innerHTML = '';
+  (state.ambition?.questions || []).forEach(q => addAmbitionQ(q.text, q.hint, q.options, false));
+  document.getElementById('comment1').value = state.ambition?.comment || '';
+  // Technology
+  document.getElementById('techQuestions').innerHTML = '';
+  document.getElementById('aiQuestions').innerHTML  = '';
+  (state.technology?.tech || []).forEach(q => addTechQ('techQuestions','tech', q.q, q.why, false));
+  (state.technology?.ai   || []).forEach(q => addTechQ('aiQuestions','ai',    q.q, q.why, false));
+  document.getElementById('comment2').value = state.technology?.comment || '';
+  // Readiness
+  document.getElementById('rdRows').innerHTML = '';
+  rdRowCount = 0;
+  (state.readiness?.dimensions || []).forEach(r =>
+    addRdRow(r.dimension, r.question, r.risk, r.rating, r.gap, false));
+  document.getElementById('comment3').value = state.readiness?.comment || '';
+  // Page
+  if (typeof state.currentPage === 'number') goTo(state.currentPage, false);
+}
+
+function loadDefaults() {
+  const d = DEFAULTS;
+  document.getElementById('extDrivers').innerHTML = '';
+  document.getElementById('intDrivers').innerHTML = '';
+  d.drivers.external.forEach(x => addDriver('extDrivers','ext', x.title, x.body, false));
+  d.drivers.internal.forEach(x => addDriver('intDrivers','int', x.title, x.body, false));
+  document.getElementById('comment0').value = '';
+  document.getElementById('ambitionQuestions').innerHTML = '';
+  d.ambition.questions.forEach(q => addAmbitionQ(q.text, q.hint, q.options, false));
+  document.getElementById('comment1').value = '';
+  document.getElementById('techQuestions').innerHTML = '';
+  document.getElementById('aiQuestions').innerHTML  = '';
+  d.technology.tech.forEach(q => addTechQ('techQuestions','tech', q.q, q.why, false));
+  d.technology.ai.forEach(q  => addTechQ('aiQuestions','ai',    q.q, q.why, false));
+  document.getElementById('comment2').value = '';
+  document.getElementById('rdRows').innerHTML = '';
+  rdRowCount = 0;
+  d.readiness.dimensions.forEach(r =>
+    addRdRow(r.dimension, r.question, r.risk, null, '', false));
+  document.getElementById('comment3').value = '';
+  goTo(0, false);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════════════════════════════════════
+
+function renderTabs() {
+  const bar = document.getElementById('tabBar');
+  bar.innerHTML = TABS.map((t,i) => `
+    <div class="tab${i===0?' active':''}" id="tab${i}" onclick="goTo(${i})">
+      <span class="tab-num">${t.num}</span>
+      <span class="tab-dot"></span>
+      ${t.label}
+    </div>`).join('');
+}
+
+function goTo(idx, doSave=true) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`page${idx}`)?.classList.add('active');
+  document.getElementById(`tab${idx}`)?.classList.add('active');
+  for (let i=0; i<idx; i++) document.getElementById(`tab${i}`)?.classList.add('done');
+  currentPage = idx;
+  document.getElementById('progFill').style.width = (currentPage/(TOTAL_PAGES-1)*100)+'%';
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (doSave) scheduleSave();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  DOM BUILDERS (drivers, questions, tech cards, readiness rows)
+// ════════════════════════════════════════════════════════════════════════════
+
+function addDriver(containerId, type, title='New driver', body='Describe this driver…', doSave=true) {
+  const el = document.createElement('div');
+  el.className = 'driver-item';
+  el.innerHTML = `
+    <div class="driver-bar ${type}"></div>
+    <div class="driver-content">
+      <div class="driver-text-wrap">
+        <input  class="driver-title-edit" value="${esc(title)}" spellcheck="true">
+        <textarea class="driver-body-edit" rows="2" spellcheck="true">${esc(body)}</textarea>
+      </div>
+      <button class="del-btn" onclick="this.closest('.driver-item').remove();scheduleSave()" title="Delete">✕</button>
+    </div>`;
+  document.getElementById(containerId).appendChild(el);
+  const ta = el.querySelector('.driver-body-edit');
+  autoResize(ta);
+  ta.addEventListener('input', function(){autoResize(this)});
+  if (doSave) scheduleSave();
+}
+
+function addAmbitionQ(text='New question', hint='Add a note…', options=[], doSave=true) {
+  const container = document.getElementById('ambitionQuestions');
+  const qIdx = container.querySelectorAll('.q-row').length + 1;
+  const div = document.createElement('div');
+  div.className = 'q-row block';
+  div.style.marginBottom = '12px';
+  const optHtml = (options||[]).map(o=>{
+    const label    = typeof o==='string' ? o : (o.label||'');
+    const selected = typeof o==='object' ? !!o.selected : false;
+    return `
+      <div class="cb-item${selected?' checked':''}" onclick="toggleCb(this)">
+        <div class="cb-box" onclick="event.stopPropagation();toggleCb(this.parentElement)"><span class="cb-tick">✓</span></div>
+        <input class="cb-label-edit" value="${esc(label)}" onclick="event.stopPropagation()">
+        <button class="del-btn" onclick="event.stopPropagation();this.closest('.cb-item').remove();scheduleSave()" title="Remove">✕</button>
+      </div>`;
+  }).join('');
+  div.innerHTML = `
+    <div class="q-inner">
+      <span class="q-num">Q${qIdx}</span>
+      <div class="q-body">
+        <input class="q-text-edit" value="${esc(text)}">
+        <input class="q-hint-edit" value="${esc(hint)}">
+        <div class="cb-grid" id="cbGrid_${qIdx}">${optHtml}</div>
+        <button class="cb-add-btn" onclick="addCbOption(this.previousElementSibling)">
+          <span style="font-size:14px">+</span> Add option
+        </button>
+      </div>
+      <button class="del-btn" style="opacity:1;margin-top:2px"
+        onclick="this.closest('.q-row').remove();renumberQs();scheduleSave()" title="Delete question">✕</button>
+    </div>`;
+  container.appendChild(div);
+  renumberQs();
+  if (doSave) scheduleSave();
+}
+
+function addCbOption(grid) {
+  const div = document.createElement('div');
+  div.className = 'cb-item';
+  div.onclick = function(){toggleCb(this)};
+  div.innerHTML = `
+    <div class="cb-box" onclick="event.stopPropagation();toggleCb(this.parentElement)"><span class="cb-tick">✓</span></div>
+    <input class="cb-label-edit" value="New option" onclick="event.stopPropagation()">
+    <button class="del-btn" style="opacity:1"
+      onclick="event.stopPropagation();this.closest('.cb-item').remove();scheduleSave()" title="Remove">✕</button>`;
+  grid.appendChild(div);
+  div.querySelector('.cb-label-edit').focus();
+  div.querySelector('.cb-label-edit').select();
+  scheduleSave();
+}
+
+function toggleCb(el) { el.classList.toggle('checked'); scheduleSave(); }
+function renumberQs() {
+  document.querySelectorAll('#ambitionQuestions .q-num').forEach((el,i)=>{el.textContent=`Q${i+1}`});
+}
+
+function addTechQ(containerId, type, q='New question', why='Why this matters…', doSave=true) {
+  const grid  = document.getElementById(containerId);
+  const div   = document.createElement('div');
+  div.className = 'tech-card';
+  const count = grid.querySelectorAll('.tech-card').length + 1;
+  const color = type==='ai' ? 'var(--purple-60)' : 'var(--blue-60)';
+  div.innerHTML = `
+    <div class="tech-q-num" style="color:${color}">Q${count}</div>
+    <textarea class="tech-q-edit"   rows="2">${esc(q)}</textarea>
+    <textarea class="tech-why-edit" rows="2">${esc(why)}</textarea>
+    <button class="del-btn"
+      onclick="this.closest('.tech-card').remove();renumberTech('${containerId}');scheduleSave()" title="Delete">✕</button>`;
+  grid.appendChild(div);
+  div.querySelectorAll('textarea').forEach(t=>{autoResize(t);t.addEventListener('input',function(){autoResize(this)})});
+  if (doSave) scheduleSave();
+}
+
+function renumberTech(id) {
+  document.querySelectorAll(`#${id} .tech-q-num`).forEach((el,i)=>{el.textContent=`Q${i+1}`});
+}
+
+function addRdRow(dim='New dimension', q='Diagnostic question…', flag='Risk if low…',
+                  rating=null, gap='', doSave=true) {
+  const tbody = document.getElementById('rdRows');
+  const id    = 'rd_'+(rdRowCount++);
+  const tr    = document.createElement('tr');
+  tr.className = 'rd-row';
+  tr.id = id;
+  tr.innerHTML = `
+    <td><input class="rd-dim-edit" value="${esc(dim)}"></td>
+    <td><textarea class="rd-q-edit" rows="2">${esc(q)}</textarea></td>
+    <td>
+      <div class="rd-rating-cell">
+        <div class="rd-stars" id="${id}_stars">
+          ${[1,2,3,4,5].map(n=>`<div class="rd-star" onclick="setRdStar('${id}',${n})">${n}</div>`).join('')}
+        </div>
+        <select class="rd-gap-sel" onchange="scheduleSave()">
+          <option value="">Gap level —</option>
+          <option value="H"${gap==='H'?' selected':''}>H — High gap</option>
+          <option value="M"${gap==='M'?' selected':''}>M — Moderate</option>
+          <option value="L"${gap==='L'?' selected':''}>L — Low / ready</option>
+        </select>
+      </div>
+    </td>
+    <td><textarea class="rd-flag-edit" rows="2">${esc(flag)}</textarea></td>
+    <td><button class="del-btn" style="opacity:1"
+      onclick="document.getElementById('${id}').remove();scheduleSave()" title="Delete">✕</button></td>`;
+  tbody.appendChild(tr);
+  tr.querySelectorAll('textarea').forEach(t=>{autoResize(t);t.addEventListener('input',function(){autoResize(this)})});
+  if (rating) setRdStar(id, rating, false);
+  if (doSave) scheduleSave();
+}
+
+function setRdStar(id, val, doSave=true) {
+  rdRatings[id] = val;
+  document.querySelectorAll(`#${id}_stars .rd-star`).forEach((s,i)=>{
+    s.classList.remove('on-1','on-2','on-3','on-4','on-5');
+    if (i < val) s.classList.add(`on-${val}`);
+    s.textContent = i+1;
+  });
+  if (doSave) scheduleSave();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════════════════════════════════════
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.max(el.scrollHeight, 32)+'px';
+}
+function sanitiseFilename(n) {
+  return n.replace(/[^a-zA-Z0-9_\-\s]/g,'').replace(/\s+/g,'_').slice(0,60) || 'session';
+}
+function today() {
+  return new Date().toISOString().slice(0,10);
+}
+function showToast(msg, isError=false) {
+  // Remove any existing toasts
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t = document.createElement('div');
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{ t.style.transition='opacity .4s'; t.style.opacity='0'; setTimeout(()=>t.remove(),400); }, 4000);
+}
+
+function finishDiag() {
+  scheduleSave();
+  const btn = event.target;
+  const msg = fileHandle
+    ? `✓ Diagnostic complete\nAll changes saved to:\n${fileHandle.name}`
+    : '✓ Diagnostic complete\nClick Save Now to download a file.';
+  showToast(msg);
+  btn.textContent = '✓ Complete';
+  btn.style.background = 'var(--green-60)';
+  btn.disabled = true;
+  setTimeout(()=>{btn.textContent='Complete Diagnostic ✓';btn.style.background='';btn.disabled=false;},4000);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════════════════
+function init() {
+  renderTabs();
+  // Hook all page containers for auto-save
+  ['page0','page1','page2','page3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.addEventListener('input', scheduleSave); el.addEventListener('change', scheduleSave); }
+  });
+  // Show the session start screen immediately
+  showSessionScreen();
+  // Load defaults into background so the app is ready when user closes screen
+  loadDefaults();
+}
+
+init();
+</script>
+</body>
+</html>
